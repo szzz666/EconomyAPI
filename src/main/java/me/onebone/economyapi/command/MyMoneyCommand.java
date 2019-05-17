@@ -27,6 +27,9 @@ import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
 import me.onebone.economyapi.EconomyAPI;
 
+import java.util.Optional;
+import java.util.UUID;
+
 public class MyMoneyCommand extends Command {
     private EconomyAPI plugin;
 
@@ -49,26 +52,28 @@ public class MyMoneyCommand extends Command {
             return false;
         }
 
-        IPlayer player;
+        String target;
         if (args.length == 0) {
             if (!(sender instanceof Player)) {
                 sender.sendMessage(TextFormat.RED + "Please use this command in-game.");
                 return true;
             }
-            player = (Player) sender;
+            target = sender.getName();
         } else {
-            player = sender.getServer().getOfflinePlayer(args[0]);
-            if (player == null) {
-                sender.sendMessage(this.plugin.getMessage("player-never-connected", new String[]{args[0]}, sender));
-                return true;
-            }
+            target = args[0];
         }
 
-        String money = EconomyAPI.MONEY_FORMAT.format(this.plugin.myMoney(player));
-        if (sender == player) {
-            sender.sendMessage(this.plugin.getMessage("mymoney-mymoney", new String[]{money}, player.getName()));
+        double money = this.plugin.myMoney(target);
+        if (money == -1) {
+            sender.sendMessage(this.plugin.getMessage("player-never-connected", new String[]{args[0]}, sender));
+            return true;
+        }
+
+        String moneyString = EconomyAPI.MONEY_FORMAT.format(money);
+        if (sender.getName().equals(target)) {
+            sender.sendMessage(this.plugin.getMessage("mymoney-mymoney", new String[]{moneyString}, target));
         } else {
-            sender.sendMessage(this.plugin.getMessage("seemoney-seemoney", new String[]{player.getName(), money}, sender));
+            sender.sendMessage(this.plugin.getMessage("seemoney-seemoney", new String[]{target, moneyString}, sender));
         }
         return true;
     }
