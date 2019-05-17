@@ -60,33 +60,31 @@ public class SetMoneyCommand extends Command {
         if (p != null) {
             player = p.getName();
         }
+        double amount;
         try {
-            double amount = Double.parseDouble(args[1]);
-            if (amount < 0) {
-                sender.sendMessage(this.plugin.getMessage("setmoney-invalid-number", sender));
-                return true;
-            }
-
-            int result = this.plugin.setMoney(player, amount);
-            switch (result) {
-                case EconomyAPI.RET_NO_ACCOUNT:
-                    sender.sendMessage(this.plugin.getMessage("player-never-connected", new String[]{player}, sender));
-                    return true;
-                case EconomyAPI.RET_CANCELLED:
-                    sender.sendMessage(this.plugin.getMessage("setmoney-failed", new String[]{player}, sender));
-                    return true;
-                case EconomyAPI.RET_INVALID:
-                    sender.sendMessage(this.plugin.getMessage("reached-max", new String[]{EconomyAPI.MONEY_FORMAT.format(amount)}, sender));
-                    return true;
-                case EconomyAPI.RET_SUCCESS:
-                    sender.sendMessage(this.plugin.getMessage("setmoney-setmoney", new String[]{player, EconomyAPI.MONEY_FORMAT.format(amount)}, sender));
-                    if (p != null) {
-                        p.sendMessage(this.plugin.getMessage("setmoney-set", new String[]{EconomyAPI.MONEY_FORMAT.format(amount)}, sender));
-                    }
-                    return true;
-            }
+            amount = Double.parseDouble(args[1]);
         } catch (NumberFormatException e) {
             sender.sendMessage(this.plugin.getMessage("setmoney-invalid-number", sender));
+            return true;
+        }
+
+        int result = this.plugin.setMoney(player, amount);
+        switch (result) {
+            case EconomyAPI.RET_NO_ACCOUNT:
+                sender.sendMessage(this.plugin.getMessage("player-never-connected", new String[]{player}, sender));
+                return true;
+            case EconomyAPI.RET_CANCELLED:
+                sender.sendMessage(this.plugin.getMessage("setmoney-failed", new String[]{player}, sender));
+                return true;
+            case EconomyAPI.RET_INVALID:
+                sender.sendMessage(this.plugin.getMessage("reached-max", new String[]{EconomyAPI.MONEY_FORMAT.format(amount)}, sender));
+                return true;
+            case EconomyAPI.RET_SUCCESS:
+                sender.sendMessage(this.plugin.getMessage("setmoney-setmoney", new String[]{player, EconomyAPI.MONEY_FORMAT.format(amount)}, sender));
+                if (p != null) {
+                    p.sendMessage(this.plugin.getMessage("setmoney-set", new String[]{EconomyAPI.MONEY_FORMAT.format(amount)}, sender));
+                }
+                return true;
         }
         return true;
     }

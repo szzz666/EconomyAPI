@@ -349,10 +349,12 @@ public class EconomyAPI extends PluginBase implements Listener {
         if (obj.containsKey(key)) {
             String message = obj.getAsString(key);
 
+            message = message.replace("%MONETARY_UNIT%", this.getMonetaryUnit());
+
             for (int i = 0; i < params.length; i++) {
                 message = message.replace("%" + (i + 1), params[i]);
             }
-            return TextFormat.colorize(message.replace("%MONETARY_UNIT%", this.getMonetaryUnit()));
+            return TextFormat.colorize(message);
         }
         return "There are no message with key \"" + key + "\"";
     }
@@ -392,7 +394,7 @@ public class EconomyAPI extends PluginBase implements Listener {
     }
 
     public void saveAll() {
-        if (this.provider instanceof Provider) {
+        if (this.provider != null) {
             this.provider.save();
         }
     }

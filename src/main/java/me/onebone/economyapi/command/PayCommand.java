@@ -65,29 +65,33 @@ public class PayCommand extends Command {
         if (p != null) {
             player = p.getName();
         }
+        double amount;
         try {
-            double amount = Double.parseDouble(args[1]);
-
-            int result = this.plugin.reduceMoney((Player) sender, amount);
-            switch (result) {
-                case EconomyAPI.RET_INVALID:
-                case EconomyAPI.RET_CANCELLED:
-                    sender.sendMessage(this.plugin.getMessage("pay-failed", sender));
-                    return true;
-                case EconomyAPI.RET_NO_ACCOUNT:
-                    sender.sendMessage(this.plugin.getMessage("player-never-connected", new String[]{player}, sender));
-                    return true;
-                case EconomyAPI.RET_SUCCESS:
-                    this.plugin.addMoney(player, amount, true);
-
-                    sender.sendMessage(this.plugin.getMessage("pay-success", new String[]{EconomyAPI.MONEY_FORMAT.format(amount), player}, sender));
-                    if (p != null) {
-                        p.sendMessage(this.plugin.getMessage("money-paid", new String[]{sender.getName(), EconomyAPI.MONEY_FORMAT.format(amount)}, sender));
-                    }
-                    return true;
-            }
+            amount = Double.parseDouble(args[1]);
         } catch (NumberFormatException e) {
             sender.sendMessage(this.plugin.getMessage("takemoney-must-be-number", sender));
+            return true;
+        }
+
+
+
+        int result = this.plugin.addMoney(player, amount);
+        switch (result) {
+            case EconomyAPI.RET_NO_ACCOUNT:
+                sender.sendMessage(this.plugin.getMessage("player-never-connected", new String[]{player}, sender));
+                break;
+            case EconomyAPI.RET_CANCELLED:
+            case EconomyAPI.RET_INVALID:
+                sender.sendMessage(this.plugin.getMessage("pay-failed", sender));
+                break;
+            case EconomyAPI.RET_SUCCESS:
+                this.plugin.reduceMoney((Player) sender, amount, true);
+
+                sender.sendMessage(this.plugin.getMessage("pay-success", new String[]{EconomyAPI.MONEY_FORMAT.format(amount), player}, sender));
+                if (p != null) {
+                    p.sendMessage(this.plugin.getMessage("money-paid", new String[]{sender.getName(), EconomyAPI.MONEY_FORMAT.format(amount)}, sender));
+                }
+                break;
         }
         return true;
     }
