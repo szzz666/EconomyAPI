@@ -73,9 +73,12 @@ public class PayCommand extends Command {
             return true;
         }
 
+        if (!this.plugin.hasAccount(player)) {
+            sender.sendMessage(this.plugin.getMessage("player-never-connected", new String[]{player}, sender));
+            return true;
+        }
 
-
-        int result = this.plugin.addMoney(player, amount);
+        int result = this.plugin.reduceMoney(player, amount);
         switch (result) {
             case EconomyAPI.RET_NO_ACCOUNT:
                 sender.sendMessage(this.plugin.getMessage("player-never-connected", new String[]{player}, sender));
@@ -85,7 +88,7 @@ public class PayCommand extends Command {
                 sender.sendMessage(this.plugin.getMessage("pay-failed", sender));
                 break;
             case EconomyAPI.RET_SUCCESS:
-                this.plugin.reduceMoney((Player) sender, amount, true);
+                this.plugin.addMoney(player, amount, true);
 
                 sender.sendMessage(this.plugin.getMessage("pay-success", new String[]{EconomyAPI.MONEY_FORMAT.format(amount), player}, sender));
                 if (p != null) {
