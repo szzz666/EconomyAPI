@@ -78,7 +78,7 @@ public class PayCommand extends Command {
             return true;
         }
 
-        int result = this.plugin.reduceMoney(player, amount);
+        int result = this.plugin.reduceMoney((Player) sender, amount);
         switch (result) {
             case EconomyAPI.RET_NO_ACCOUNT:
                 sender.sendMessage(this.plugin.getMessage("player-never-connected", new String[]{player}, sender));

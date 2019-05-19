@@ -339,7 +339,7 @@ public class EconomyAPI extends PluginBase implements Listener {
     }
 
     public boolean hasAccount(String id) {
-        return provider.accountExists(id);
+        return provider.accountExists(checkAndConvertLegacy(id).map(UUID::toString).map(String::toLowerCase).orElse(id));
     }
 
     public String getMessage(String key, String[] params, String player) { // TODO: Individual language
