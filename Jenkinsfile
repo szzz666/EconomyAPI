@@ -24,7 +24,27 @@ pipeline {
                 branch "master"
             }
             steps {
-                sh 'mvn source:jar deploy -DskipTests'
+                rtMavenDeployer(
+                        id: "maven-deployer",
+                        serverId: "opencollab-artifactory",
+                        releaseRepo: "maven-releases",
+                        snapshotRepo: "maven-snapshots"
+                )
+                rtMavenResolver(
+                        id: "maven-resolver",
+                        serverId: "opencollab-artifactory",
+                        releaseRepo: "release",
+                        snapshotRepo: "snapshot"
+                )
+                rtMavenRun(
+                        pom: "pom.xml",
+                        goals: "javadoc:jar source:jar install",
+                        deployerId: "maven-deployer",
+                        resolverId: "maven-resolver"
+                )
+                rtPublishBuildInfo(
+                        serverId: "opencollab-artifactory"
+                )
             }
         }
     }
