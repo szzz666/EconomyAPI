@@ -1,4 +1,4 @@
-# EconomyAPI [![Build Status](https://travis-ci.org/EconomyS/EconomyAPI.svg?branch=master)](https://travis-ci.org/EconomyS/EconomyAPI)
+# EconomyAPI
 Core of economy system for Nukkit
 
 ## Commands
@@ -27,17 +27,17 @@ EconomyAPI.getInstance().reduceMoney(player, amount);
 EconomyAPI.getInstance().addMoney(player, amount);
 ```
 
-Maven repository
+### Maven repository
 ```xml
 <repository>
-	<id>onebone</id>
-	<url>http://jenkins.onebone.me/plugin/repository/everything/</url>
+    <id>nukkitx-repo</id>
+    <url>https://repo.nukkitx.com/snapshot</url>
 </repository>
 
 <dependency>
-	<groupId>me.onebone</groupId>
-	<artifactId>economyapi</artifactId>
-	<version>1.0.0</version>
-	<scope>provided</scope>
+    <groupId>me.onebone</groupId>
+    <artifactId>economyapi</artifactId>
+    <version>2.0.2</version>
+    <scope>provided</scope>
 </dependency>
 ```

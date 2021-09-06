@@ -27,6 +27,8 @@ import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.TextFormat;
 import cn.nukkit.utils.Utils;
+import com.nimbusds.jose.shaded.json.JSONObject;
+import com.nimbusds.jose.shaded.json.JSONValue;
 import me.onebone.economyapi.command.*;
 import me.onebone.economyapi.event.account.CreateAccountEvent;
 import me.onebone.economyapi.event.money.AddMoneyEvent;
@@ -35,8 +37,6 @@ import me.onebone.economyapi.event.money.SetMoneyEvent;
 import me.onebone.economyapi.provider.Provider;
 import me.onebone.economyapi.provider.YamlProvider;
 import me.onebone.economyapi.task.AutoSaveTask;
-import net.minidev.json.JSONObject;
-import net.minidev.json.JSONValue;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,13 +56,13 @@ public class EconomyAPI extends PluginBase implements Listener {
     private static EconomyAPI instance;
     private Provider provider;
     private HashMap<String, JSONObject> language = null;
-    private HashMap<String, Class<?>> providerClass = new HashMap<>();
+    private final HashMap<String, Class<?>> providerClass = new HashMap<>();
 
     static {
         MONEY_FORMAT.setMaximumFractionDigits(2);
     }
 
-    private String[] langList = new String[]{
+    private final String[] langList = new String[]{
             "ch", "cs", "def", "fr", "id", "it", "jp", "ko", "nl", "ru", "zh"
     };
 
@@ -458,7 +458,7 @@ public class EconomyAPI extends PluginBase implements Listener {
 
         this.provider.open();
 
-        this.getLogger().notice("Data provider was set to: " + provider.getName());
+        this.getLogger().info("Data provider was set to: " + provider.getName());
         return true;
     }
 

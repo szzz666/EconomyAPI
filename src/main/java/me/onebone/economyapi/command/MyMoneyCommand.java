@@ -18,7 +18,6 @@ package me.onebone.economyapi.command;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import cn.nukkit.IPlayer;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
@@ -26,9 +25,6 @@ import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
 import me.onebone.economyapi.EconomyAPI;
-
-import java.util.Optional;
-import java.util.UUID;
 
 public class MyMoneyCommand extends Command {
     private EconomyAPI plugin;
