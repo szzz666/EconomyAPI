@@ -23,11 +23,12 @@ import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
+import cn.nukkit.lang.TranslationContainer;
 import cn.nukkit.utils.TextFormat;
 import me.onebone.economyapi.EconomyAPI;
 
 public class PayCommand extends Command {
-    private EconomyAPI plugin;
+    private final EconomyAPI plugin;
 
     public PayCommand(EconomyAPI plugin) {
         super("pay", "Pays to other player", "/pay <player> <amount>");
@@ -46,17 +47,17 @@ public class PayCommand extends Command {
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (!this.plugin.isEnabled()) return false;
         if (!sender.hasPermission("economyapi.command.pay")) {
-            sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+            sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.permission"));
             return false;
         }
 
         if (!(sender instanceof Player)) {
-            sender.sendMessage(TextFormat.RED + "Please use this command in-game.");
+            sender.sendMessage(new TranslationContainer("%commands.generic.ingame"));
             return true;
         }
 
         if (args.length < 2) {
-            sender.sendMessage(TextFormat.RED + "Usage: " + this.getUsage());
+            sender.sendMessage(new TranslationContainer("commands.generic.usage", this.getUsage()));
             return true;
         }
         String player = args[0];
@@ -70,6 +71,11 @@ public class PayCommand extends Command {
             amount = Double.parseDouble(args[1]);
         } catch (NumberFormatException e) {
             sender.sendMessage(this.plugin.getMessage("takemoney-must-be-number", sender));
+            return true;
+        }
+
+        if (amount < 0.01) {
+            sender.sendMessage(this.plugin.getMessage("pay-too-low", sender));
             return true;
         }
 

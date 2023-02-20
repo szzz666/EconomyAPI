@@ -23,11 +23,12 @@ import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
+import cn.nukkit.lang.TranslationContainer;
 import cn.nukkit.utils.TextFormat;
 import me.onebone.economyapi.EconomyAPI;
 
 public class MyMoneyCommand extends Command {
-    private EconomyAPI plugin;
+    private final EconomyAPI plugin;
 
     public MyMoneyCommand(EconomyAPI plugin) {
         super("mymoney", "Shows your money", "/money", new String[]{"money", "bal", "seemoney", "balance"});
@@ -44,14 +45,14 @@ public class MyMoneyCommand extends Command {
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (!this.plugin.isEnabled()) return false;
         if (!sender.hasPermission("economyapi.command.mymoney")) {
-            sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+            sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.permission"));
             return false;
         }
 
         String target;
         if (args.length == 0) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(TextFormat.RED + "Please use this command in-game.");
+                sender.sendMessage(new TranslationContainer("%commands.generic.ingame"));
                 return true;
             }
             target = sender.getName();

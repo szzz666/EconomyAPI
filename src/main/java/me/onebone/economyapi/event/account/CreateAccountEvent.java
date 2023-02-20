@@ -25,7 +25,7 @@ import cn.nukkit.event.HandlerList;
 public class CreateAccountEvent extends Event implements Cancellable {
     public static HandlerList handlerList = new HandlerList();
 
-    private String player;
+    private final String player;
     private double defaultMoney;
 
     public CreateAccountEvent(String player, double defaultMoney) {

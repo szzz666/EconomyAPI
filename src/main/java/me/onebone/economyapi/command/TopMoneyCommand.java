@@ -22,13 +22,14 @@ import cn.nukkit.IPlayer;
 import cn.nukkit.Server;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.lang.TranslationContainer;
 import cn.nukkit.utils.TextFormat;
 import me.onebone.economyapi.EconomyAPI;
 
 import java.util.*;
 
 public class TopMoneyCommand extends Command {
-    private EconomyAPI plugin;
+    private final EconomyAPI plugin;
 
     public TopMoneyCommand(EconomyAPI plugin) {
         super("topmoney", "Shows top money of this server", "/topmoney [page]", new String[]{"baltop", "balancetop"});
@@ -55,19 +56,19 @@ public class TopMoneyCommand extends Command {
     public boolean execute(final CommandSender sender, String label, final String[] args) {
         if (!this.plugin.isEnabled()) return false;
         if (!sender.hasPermission("economyapi.command.topmoney")) {
-            sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+            sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.permission"));
             return false;
         }
 
         try {
-            final LinkedHashMap<String, Double> money = plugin.getAllMoney();
-            final Set<String> players = money.keySet();
-            final int page = args.length > 0 ? Math.max(1, Math.min(Integer.parseInt(args[0]), players.size())) : 1;
-            sender.getServer().getScheduler().scheduleTask(() -> {
+            int arg = args.length > 0 ? Integer.parseInt(args[0]) : 1;
+            final LinkedHashMap<String, Double> money = new LinkedHashMap<>(plugin.getAllMoney());
+            sender.getServer().getScheduler().scheduleTask(EconomyAPI.getInstance(), () -> {
+                int page = args.length > 0 ? Math.max(1, Math.min(arg, money.size())) : 1;
                 List<String> list = new LinkedList<>(money.keySet());
                 list.sort((s1, s2) -> Double.compare(money.get(s2), money.get(s1)));
                 StringBuilder output = new StringBuilder();
-                output.append(plugin.getMessage("topmoney-tag", new String[]{Integer.toString(page), Integer.toString(((players.size() + 6) / 5))}, sender)).append("\n");
+                output.append(plugin.getMessage("topmoney-tag", new String[]{Integer.toString(page), Integer.toString(((money.size() + 6) / 5))}, sender)).append("\n");
                 if (page == 1) {
                     double total = 0;
                     for (double val : money.values()) {
@@ -89,12 +90,11 @@ public class TopMoneyCommand extends Command {
                         break;
                     }
                 }
-                output.substring(0, output.length() - 1);
 
-                sender.sendMessage(output.toString());
-            });
+                sender.sendMessage(output.substring(0, output.length() - 1));
+            }, true);
         } catch (NumberFormatException e) {
-            sender.sendMessage(TextFormat.RED + "Please provide a number.");
+            sender.sendMessage(TextFormat.RED + this.plugin.getMessage("topmoney-invalid-page-number", sender));
         }
         return true;
     }
