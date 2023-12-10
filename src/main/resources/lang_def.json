@@ -21,6 +21,7 @@
   "pay-failed": "§6Failed to pay",
   "pay-success": "§6Paid §c%MONETARY_UNIT%%1 §6to §2%2",
   "pay-too-low": "§cThe amount is too small",
+  "pay-failed-self": "§cCan't pay self",
   "money-paid": "§2%1 §6gave you §c%MONETARY_UNIT%%2",
   "takemoney-must-be-number": "§6Amount must be numeric",
   "takemoney-invalid-number": "§6Invalid number was provided",

@@ -64,6 +64,11 @@ public class PayCommand extends Command {
 
         Player p = this.plugin.getServer().getPlayer(player);
         if (p != null) {
+            if (sender == p) {
+                sender.sendMessage(this.plugin.getMessage("pay-failed-self", sender));
+                return true;
+            }
+
             player = p.getName();
         }
         double amount;
