@@ -40,12 +40,12 @@ jobs:
       run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
     - name: Format ChangeLog
       id: get-changelog
-      if: success() && github.event_name == 'push' && github.repository == 'MemoriesOfTime/Nukkit-MOT' && contains(github.ref_name, 'master')
+      if: success() && github.event_name == 'push' && github.repository == 'MemoriesOfTime/EconomyAPI' && contains(github.ref_name, 'master')
       run: echo "changelog=${{ github.event.commits[0].message }}" >> $GITHUB_OUTPUT
     - name: Get Time
       id: time
       uses: nanzm/get-time-action@v1.1
-      if: github.repository == 'MemoriesOfTime/Nukkit-MOT' && contains(github.ref_name, 'master')
+      if: github.repository == 'MemoriesOfTime/EconomyAPI' && contains(github.ref_name, 'master')
       with:
         timeZone: 8
         format: 'YYYY/MM/DD-HH:mm:ss'
