@@ -1,0 +1,64 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+    - run: mkdir staging && cp target/*.jar staging
+    - uses: actions/upload-artifact@v1
+      with:
+        name: EconomyAPI-SNAPSHOT
+        path: staging
+     # 生成信息
+    - name: Get Short SHA
+      id: vars
+      run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+    - name: Format ChangeLog
+      id: get-changelog
+      if: success() && github.event_name == 'push' && github.repository == 'MemoriesOfTime/Nukkit-MOT' && contains(github.ref_name, 'master')
+      run: echo "changelog=${{ github.event.commits[0].message }}" >> $GITHUB_OUTPUT
+    - name: Get Time
+      id: time
+      uses: nanzm/get-time-action@v1.1
+      if: github.repository == 'MemoriesOfTime/Nukkit-MOT' && contains(github.ref_name, 'master')
+      with:
+        timeZone: 8
+        format: 'YYYY/MM/DD-HH:mm:ss'
+     # 推送到minebbs    
+    - name: Update MineBBS infomation
+      uses: fjogeleit/http-request-action@v1
+      if: success() && github.event_name == 'push' && github.repository == 'MemoriesOfTime/EconomyAPI' && contains(github.ref_name, 'master')
+      with:
+        url: 'https://api.minebbs.com/api/openapi/v1/resources/9336/update'
+        method: 'POST'
+        customHeaders: '{"Authorization": "Bearer ${{ secrets.MINEBBS_API_KEY }}"}'
+        contentType: 'application/json'
+        data: '{"title": "${{ github.ref_name }}-${{ steps.vars.outputs.sha_short }}", "description": "${{ steps.get-changelog.outputs.changelog }}", "new_version": "${{ steps.time.outputs.time }}", "file_url": "https://motci.cn/view/Memories%20Of%20Time/job/EconomyAPI/"}'
+        escapeData: 'true'
+        preventFailureOnNoResponse: 'true'
+        ignoreStatusCodes: '400,404,401,403,500,502,503,504'
