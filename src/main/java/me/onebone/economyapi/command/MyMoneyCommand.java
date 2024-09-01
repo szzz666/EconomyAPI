@@ -66,7 +66,7 @@ public class MyMoneyCommand extends Command {
 
         double money = this.plugin.myMoney(target);
         if (money == -1) {
-            sender.sendMessage(EconomyAPI.getI18n().tr(langCode, "player-never-connected", args[0]));
+            sender.sendMessage(EconomyAPI.getI18n().tr(langCode, "player-never-connected", target));
             return true;
         }
 
