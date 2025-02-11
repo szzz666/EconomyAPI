@@ -23,15 +23,18 @@
     </properties>
 
     <dependencies>
+        <!-- Nukkit -->
         <dependency>
             <groupId>cn.nukkit</groupId>
             <artifactId>Nukkit</artifactId>
             <version>MOT-SNAPSHOT</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Nukkit-MOT-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.smallaswater.easysqlx</groupId>
             <artifactId>EasySQLX</artifactId>
+
             <version>4.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
