@@ -84,7 +84,7 @@ public class PayCommand extends Command {
             return true;
         }
 
-        if (amount < 0.01) {
+        if (amount < 0.01 || Double.isNaN(amount)) {
             sender.sendMessage(EconomyAPI.getI18n().tr(langCode, "pay-too-low"));
             return true;
         }
